@@ -70,5 +70,14 @@ class Place(models.Model):
                 return "Нет Имени"
 
 
+class Routes(models.Model):
+    class Meta:
+        verbose_name_plural = 'Маршруты'
+        verbose_name = 'Маршрут'
 
+    title = models.CharField('Маршрут', max_length=50, blank=True, null=True)
+    route_place = models.ManyToManyField(Place, related_name='place_route', blank=True)
+    ordering = models.PositiveSmallIntegerField(default=0, blank=True, verbose_name='Порядок следования')
 
+    def __str__(self):
+        return self.title
