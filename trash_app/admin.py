@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Place, TimeInterval, Date, VGarbage
+from .models import Place, TimeInterval, Date, VGarbage, Routes
 
 # Register your models here.
 
@@ -18,7 +18,11 @@ class VGarbageAdmin(admin.ModelAdmin):
     list_display = ['garbage', 'ordering']
     list_display_links = ['garbage']
 
+class RoutesAdmin(admin.ModelAdmin):
+    list_display = ['title', 'ordering', 'route_place']
+
 admin.site.register(VGarbage)
 admin.site.register(Date)
 admin.site.register(Place, PlaceAdmin)
 admin.site.register(TimeInterval, TimeIntervalAdmin)
+admin.site.register(Routes)
