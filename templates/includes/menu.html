@@ -1,0 +1,24 @@
+{% load staticfiles %}
+{% if request.user.is_staff %}
+ <div class="menu-container">
+        <ul class="menu-list">
+
+                <li class="logo"><a href="#"><img src="{% static 'img/logo.png' %}"></a></li>
+                <li><a href="order.html">Заказ на вывоз</a></li>
+                <li><a href="account.html">Личный кабинет</a></li>
+                <li><a href="#">Отчеты</a></li>
+                <li><a href="#">Выйти из кабинета </a></li>
+        </ul>
+    </div>
+    {% else %}
+    <div class="menu-container">
+        <ul class="menu-list">
+
+                <li class="logo"><a href="#"><img src="{% static 'img/logo.png' %}"></a></li>
+                <li><a href="#">Тут Текст</a></li>
+                <li><a href="#">Тут Текст</a></li>
+                <li><a href="#">Тут Текст</a></li>
+                <li><a href="#">Тут Текст</a></li>
+        </ul>
+    </div>
+{% endif %}

@@ -1,0 +1,55 @@
+.menu-container{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 240px;
+    background-color: #21231b;
+    height: 100%;
+    font-family: Ubuntu;
+    font-size: 16px;
+    color: white;
+}
+
+.menu-container a{
+    text-decoration: none;
+    width: 100%;
+    height: 100%;
+    color: white;
+}
+
+.menu-list{
+    margin: 0px;
+    padding: 0px;
+}
+
+.menu-list li{
+    padding: 14px 26px;
+    list-style-type: none;
+    border-width: 1px;
+    border-bottom: 1px solid #42443d;
+    height: 50px;
+}
+
+.menu-list li:hover{
+    background-color: #50d85c;
+    color: black;
+}
+
+.logo{
+    padding: 40px 30px !important;
+    height: auto !important;
+}
+
+@font-face {
+    font-family: Ubuntu;
+    src: url('../fonts/Ubuntu.ttf');
+}
+
+.active-menu-element{
+    background-color: #50d85c;
+    color: black;
+}
+
+.logo{
+    background: none !important;
+}

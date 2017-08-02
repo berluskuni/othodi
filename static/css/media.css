@@ -1,0 +1,85 @@
+@media (max-width: 1202px) {
+    .content-account{
+        display: block !important;
+    }
+    .account-order{
+        margin: 40px 5px !important;
+    }
+}
+
+@media (max-width: 992px) {
+
+    .account-order-info-bottom{
+        margin-left: 0px;
+    }
+}
+
+@media (max-width: 1262px) {
+    .input-small{
+        width: 200px;
+    }
+    .input-large{
+        width: 640px;
+    }
+}
+
+@media (max-width: 470px){
+    .account-order-type{
+        display: block;
+        margin-top: 20px;
+    }
+    .account-order-button{
+        margin-left: 0px;
+        margin-right: 17px;
+    }
+}
+
+@media (max-width: 1267px) {
+    .row{
+        margin-top: 20px;
+        margin-left: 10px;
+        /*margin: 20px 10px 10px 10px;*/
+        margin-right:20px;
+    }
+
+    .order-time-item{
+        margin-top: 10px;
+    }
+    .order-time{
+        margin-bottom: 0px;
+    }
+}
+
+@media (max-width: 667px) {
+
+}
+
+@media (max-width: 747px) {
+    .content-order {
+        display: block;
+    }
+    .input-small{
+        width: 100%;
+    }
+    .input-large{
+        width: 100% !important;
+    }
+    .submit-order-text{
+        display: block;
+        margin-top: 20px;
+
+    }
+}
+
+@media (max-width: 721px) {
+    .order-button,.submit-order{
+        display: block;
+        margin-top: 10px;
+        width: 100%;
+        text-align: center;
+    }
+    .form-group-button{
+        width: 100%;
+
+    }
+}

@@ -1,0 +1,215 @@
+ {% load staticfiles l10n %}
+             <div class="row content-order">
+                    <div class="form-group-small">
+                        <label for="last_name">Фамилия</label>
+                        <input class="form-control input-small valid-input" id="last_name" type="text"
+                               name="last_name" value="{% if user.last_name %}{{ user.last_name }}{% endif %}" required="required">
+                    </div>
+                    <div class="form-group-small">
+                        <label for="first_name">Имя</label>
+                        <input class="form-control input-small invalid-input" id="first_name" type="text"
+                                value="{% if user.first_name %}{{ user.first_name }}{% endif %}" name="first_name" required="required">
+                    </div>
+                      <div class="form-group-small">
+                    <label for="phone">Телефон</label>
+                    <input class="form-control input-small" id="phone"
+                            name="phone" value="{% if user.phone %}{{ user.phone }}{% endif %}" type="text" placeholder="Телефон" required="required">
+                     </div>
+            </div>
+
+            <div class="row content-order">
+                <div class="form-group-large">
+                    <label for="address">Адрес(в указаном формате)</label>
+                    <input class="form-control input-large" id="address" type="text"
+                            name="add" value="{% if user.address %}{{ user.address }}{% endif %}" placeholder="Москва, ул. Толстого, 16" required="required">
+                </div>
+            </div>
+
+            <div class="row content-order-button">
+                <div class="form-group-button">
+                    <label class="order-button-label">Количество мусора</label>
+                    <div id="quantity-button" class="form-button-control">
+                        {% for v in v_garbage %}
+                        <span class="order-button {% if forloop.counter == 1 %}active-order-button{% endif %}" id="{{ forloop.counter }}">{{ v }} литров</span>
+                        {% endfor %}
+                    <!--
+                        <span class="order-button">60 литров</span>
+                        <span class="order-button">120 литров</span>
+                    -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="row content-order">
+                <div class="form-group-button">
+                    <label class="order-button-label">Укажите желаемый интервал забора мусора</label>
+                    {% for item in dates %}
+                    <div class="order-time">
+                    <input class="interval-date" type="hidden" value="{{ item }}">
+                        <div class="order-time-item">
+                            <span class="time-label">{% if item.get_short_day == 'Mon' %}ПН:({{ item }})
+                                {% elif item.get_short_day == 'Tue' %}ВТ:({{ item }})
+                                {% elif item.get_short_day == 'Wed' %}СР:({{ item }})
+                                {% elif item.get_short_day == 'Thu' %}ЧТ:({{ item }})
+                                {% elif item.get_short_day == 'Fri' %}ПТ:({{ item }})</span>
+                                {% endif %}
+                            {% for x in interval %}
+                            {% if not item in x.date_time.all %}
+                            <span class="interval-button" id="{{ x.ordering }}">{{ x }}</span>
+                                {% endif %}
+                          {% endfor %}
+                        </div>
+                    </div><br>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="row content-order">
+                <div class="form-group-button">
+                    <label class="order-date-label" for="time-interval">Если через неделю, укажите желаемую дату и время</label>
+                    <div class="order-time">
+                        <input class="form-control input-date"  type="date">
+                        <select id="time-interval" name="selectbasic" class="form-control input-date-time">
+                            <option value="0" selected >----------</option>
+                                    {% for item in interval %}
+                            <option value="{{ forloop.counter }}">{{ item }}</option>
+                                       {% endfor %}
+                          </select>
+                        <!--<input class="form-control input-date-time" type="text">-->
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row content-order-submit">
+                <div class="form-group-button">
+                        <a href="javascript:void(0);" class="submit-order"><span>Отправить заказ</span></a>
+                        <span class="submit-order-text">В течении 15 минут с Вами свяжется менеджер для подтверждения заказа</span>
+                </div>
+            </div>
+       {% include 'includes/payment.html' %}
+
+<script>
+    $(document).ready(function(){
+        $('.order-button').on('click', function (e) {
+           e.preventDefault();
+           e.stopImmediatePropagation();
+           var buttonArray = $('.order-button');
+           for (var i = 0 ; i <buttonArray.length;i++){
+           $(buttonArray[i]).removeClass('active-order-button');
+             }
+         $(this).addClass('active-order-button');
+        });
+        $('.interval-button').on('click', function(){
+          var buttonArray = $('.interval-button');
+           for (var i = 0 ; i <buttonArray.length;i++){
+           $(buttonArray[i]).removeClass('active-interval-button');
+             }
+           $(this).addClass('active-interval-button');
+           $('body').find('.input-date').val('');
+           $('body').find('#time-interval').val(0);
+        });
+        $('.input-date').on('change', function(){
+            var buttonArray = $('.interval-button');
+            console.log($(this).val());
+           for (var i = 0 ; i <buttonArray.length;i++){
+           $(buttonArray[i]).removeClass('active-interval-button');
+             }
+        });
+        $('.submit-order').off().on('click', function(){
+            var body = $('body');
+            var first_name = body.find('#first_name').val();
+            var last_name = body.find('#last_name').val();
+            var phone = body.find('#phone').val();
+            var address = body.find('#address').val();
+            if (first_name.length == 0 || last_name.length == 0 || phone.length == 0 || address.length == 0){
+                alert('Заполните пожалуйста все поля');
+            }
+            var email = body.find('#email').val();
+            var v_trash = body.find('.active-order-button').attr('id');
+            var csrfmiddlewaretoken = $('input[name=csrfmiddlewaretoken]');
+            var input_date = body.find('.input-date').val();
+            var requestSent = false;
+            if (input_date.length == 0){
+                var interval = body.find('.active-interval-button');
+                if (interval.length == 0){
+                    alert('Заполните пожалуйста все поля');
+                }
+                var data = interval.parent().parent().parent().find('.interval-date').val();
+                $.ajax({
+                       type: 'POST',
+                       url:'/profile-submit/',
+                       data: {
+                          time_interval: interval.attr('id'),
+                          first_name: first_name,
+                          last_name: last_name,
+                          phone: phone,
+                          address: address,
+                          date: data,
+                          email:email,
+                          v_garbage: v_trash,
+                          'csrfmiddlewaretoken': csrfmiddlewaretoken.val()
+
+            },
+            success: function (response) {
+                        if (response.status == true) {
+                            swal({
+                                title: "Спасибо за обращение!",
+                                html: response.data
+                            });
+                            body.find('.payment').css('display', 'block')
+                        } else {
+                            swal({
+                                title: "Спасибо за обращение!",
+                                text: 'Выбранный вами интервал уже занят'
+                            })
+
+                        }
+                    },
+            complete: function(){
+                requestSent = false;
+            }
+            })
+            } else {
+                var user_interval = body.find('#time-interval').val();
+                $.ajax({
+                       type: 'POST',
+                       url:'/profile-submit/',
+                       data: {
+                          time_interval: user_interval,
+                          first_name: first_name,
+                          last_name: last_name,
+                          phone: phone,
+                          address: address,
+                          date: input_date,
+                          email:email,
+                          v_garbage: v_trash,
+                          'csrfmiddlewaretoken': csrfmiddlewaretoken.val()
+
+            },
+            success: function (response) {
+                        if (response.status == true) {
+                            swal({
+                                title: "Спасибо за обращение!",
+                                html: response.data
+                            });
+                            body.find('.payment').css('display', 'block')
+                        } else {
+                            swal({
+                                title: "Спасибо за обращение!",
+                                text: 'Выбранный вами интервал уже занят'
+                            })
+
+                        }
+                    },
+            complete: function(){
+                requestSent = false;
+            }
+            })
+            }
+
+            //console.log(input_date.length);
+        })
+    });
+
+</script>

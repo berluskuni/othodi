@@ -1,0 +1,57 @@
+.map-container{
+    -moz-border-radius: 14px 14px 14px 14px; /* Firefox */
+    -webkit-border-radius: 14px 14px 14px 14px; /* Safari, Chrome */
+    -khtml-border-radius: 14px 14px 14px 14px; /* KHTML */
+    border-radius: 14px 14px 14px 14px; /* CSS3 */
+    overflow: hidden;
+    position: relative;
+    /* chrome bug fix */
+    -webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC);
+}
+
+.map-info{
+    padding: 5px 20px;
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    width: 295px;
+    height:100px;
+    background: #000;
+    opacity: 0.8;
+    border-radius: 0px 10px 0px 0px;
+    font-size: 13px;
+}
+
+.map-info-item{
+    color: white;
+    border-bottom: 1px solid #67655a;
+    padding: 5px 0px;
+}
+
+.map-info-item:last-child{
+    border-bottom: none;
+}
+
+.map-info-param{
+    float: right;
+}
+
+.bigMap{
+    width: 690px; height: 420px;
+}
+
+.lgMap{
+    width: 600px; height: 420px;
+}
+
+.mdMap{
+    width: 400px; height: 420px;
+}
+
+.smMap{
+    width: 690px; height: 420px;
+}
+
+.map-mobile{
+    width: 100%;
+}

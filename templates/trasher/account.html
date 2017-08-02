@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block contents %}
+<div class="container">
+    <div class="menu-container">
+         <ul class="menu-list">
+
+                <li class="logo"><a href="#"><img src="{% static 'img/logo.png' %}"></a></li>
+             <!--
+             <li><a href="order.html">Заказ на вывоз</a></li>
+                <li><a href="account.html"></a></li>
+             -->
+                <li><a href="#">Отчеты</a></li>
+                <li><a href="#">Выйти из кабинета </a></li>
+        </ul>
+    </div>
+    <div class="content-container content-padding">
+        <a href="#menu-toggle" class="btn btn-default" id="sandwich"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></a>
+        <div class="row title">
+            <span>Кабинет Администратора</span>
+        </div>
+        <div class="row content-account">
+            <div class="map-container bigMap">
+                <div id="map" class="bigMap"></div>
+                <div class="map-info">
+                    <div class="map-info-item">
+
+                    </div>
+                </div>
+                <div class="map-info">
+                    <div class="map-info-item"><span>Длина пути</span> <span class="map-info-param">72км</span></div>
+                    <div class="map-info-item"><span>Время в пути</span><span class="map-info-param">3ч</span></div>
+                    <div class="map-info-item"><span>Количество точек забора</span><span class="map-info-param">30</span></div>
+                </div>
+            </div>
+
+            <div class="account-order">
+             <form method="post" action="/adminka/add_marker/">
+             {% csrf_token %}
+                <div><span>Нанести заказы на карту за</span>
+                    <div class="account-order-type">
+                    <select id="time-interval" name="selectbasic" class="account-data-select">
+                            <option value="0" selected >----------</option>
+                                    {% for item in dates %}
+                            <option value="{{ item }}">{{ item }}</option>
+                                         {% endfor %}
+                            </select>
+
+                           <button type="submit" class="account-order-button active-account-order-button">Нанести</button>
+                    <!--<span class="account-order-button">Маршруту</span>-->
+                    </div>
+                </div>
+             </form>
+                <div class="account-order-info-top">
+                    <div class="account-order-info-top-item"><span>Всего заказов</span><span class="account-order-info-param">72</span></div>
+                    <div class="account-order-info-top-item"><span>Всего литраж</span><span class="account-order-info-param">1280 л.</span></div>
+                    <div class="account-order-info-top-item"><span>Всего оплаты</span><span class="account-order-info-param">24 800 руб.</span></div>
+                </div>
+                <!--
+                <div class="account-order-info-bottom">
+                    <div class="account-order-info-bottom-item"><span>Комиссия за оплату</span><span class="account-order-info-param">500 руб.</span></div>
+                    <div class="account-order-info-bottom-item"><span>Мусорозаборщику</span><span class="account-order-info-param">5000 руб.</span></div>
+                    <div class="account-order-info-bottom-item"><span>К выплате</span><span class="account-order-info-param">5500 руб.</span></div>
+                </div>
+                -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contents %}
+{% block maps_script %}
+    <script src="{% static 'js/map.js' %}"></script>
+{% endblock maps_script %}

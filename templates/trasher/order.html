@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block contents %}
+    {% include 'includes/menu.html' %}
+    <div class="content-container content-padding">
+     <a href="#menu-toggle" class="btn btn-default" id="sandwich"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></a>
+        <div class="row title">
+            <span>Заказ на вывоз мусора</span>
+        </div>
+     <form class="form-content">
+     {% csrf_token %}
+         <div class="row content-order">
+                <div class="form-group-button">
+                    <label class="order-button-label">Кем вы являетесь?</label>
+                    <div class="form-button-control form-left-right-button">
+                            <span id="publish" class="btn btn-default left-button active-button">Частное лицо</span>
+                            <span id="no-publish"  class="btn btn-default right-button">Юридическое лицо</span>
+                    </div>
+                </div>
+            </div>
+          <div class="row content-order email_submit">
+                <div class="form-group-small">
+                    <label for="email">E-mail</label>
+                    <input class="form-control input-small" id="email" type="text">
+                </div>
+                <div class="form-group-small">
+                    <label for="email-repeat">E-mail (повтор)(после ввода нажмите Enter)</label>
+                    <input class="form-control input-small" id="email-repeat" type="text">
+                </div>
+          </div>
+             </form>
+    </div>
+{% endblock contents %}

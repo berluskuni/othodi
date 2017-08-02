@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block contents %}
+<div class="container">
+    <div class="menu-container">
+         <ul class="menu-list">
+
+                <li class="logo"><a href="#"><img src="{% static 'img/logo.png' %}"></a></li>
+             <!--
+             <li><a href="order.html">Заказ на вывоз</a></li>
+                <li><a href="account.html"></a></li>
+             -->
+                <li><a href="#">Отчеты</a></li>
+                <li><a href="#">Выйти из кабинета </a></li>
+        </ul>
+    </div>
+    <div class="content-container content-padding">
+        <a href="#menu-toggle" class="btn btn-default" id="sandwich"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></a>
+        <div class="row title">
+            <span>Кабинет Администратора</span>
+        </div>
+        <div class="row content-account">
+            <div class="map-container bigMap">
+                <div id="map" class="bigMap"></div>
+                <div class="map-info">
+                    <div class="map-info-item">
+
+                    </div>
+                </div>
+                <div class="map-info">
+                    <div class="map-info-item"><span>Длина пути</span> <span class="map-info-param length-track">72км</span></div>
+                    <div class="map-info-item"><span>Время в пути</span><span class="map-info-param time-track">3ч</span></div>
+                    <div class="map-info-item"><span>Количество точек забора</span><span class="map-info-param">{{ users.count }}</span></div>
+                </div>
+            </div>
+
+            <div class="account-order">
+             <form method="post" action="/adminka/add_marker/">
+             {% csrf_token %}
+                <div><span>Нанести заказы на карту за</span>
+                    <div class="account-order-type">
+                    <select id="time-interval" name="selectbasic" class="account-data-select">
+                            <option value="0" selected >----------</option>
+                                    {% for item in dates %}
+                            <option value="{{ item }}">{{ item }}</option>
+                                         {% endfor %}
+                            </select>
+
+                           <button class="account-order-button active-account-order-button">Нанести</button>
+                    <!--<span class="account-order-button">Маршруту</span>-->
+                    </div>
+                </div>
+             </form>
+                <div class="account-order-info-top">
+                    <div class="account-order-info-top-item"><span>Всего заказов</span><span class="account-order-info-param">{{ users.count }}</span></div>
+                    <div class="account-order-info-top-item"><span>Всего литраж</span><span class="account-order-info-param">{{ trash }}</span></div>
+                    <div class="account-order-info-top-item"><span>Всего оплаты</span><span class="account-order-info-param">24 800 руб.</span></div>
+                </div>
+                <!--
+                <div class="account-order-info-bottom">
+                    <div class="account-order-info-bottom-item"><span>Комиссия за оплату</span><span class="account-order-info-param">500 руб.</span></div>
+                    <div class="account-order-info-bottom-item"><span>Мусорозаборщику</span><span class="account-order-info-param">5000 руб.</span></div>
+                    <div class="account-order-info-bottom-item"><span>К выплате</span><span class="account-order-info-param">5500 руб.</span></div>
+                </div>
+                -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contents %}
+
+{% block maps_script %}
+    <script>
+    ymaps.ready(init);
+var myMap;
+
+function init(){
+    myMap = new ymaps.Map("map", {
+        center: [55.76, 37.64],
+        controls: ['zoomControl', 'searchControl', 'typeSelector',  'fullscreenControl'], // контролы для управления карты
+        zoom: 7
+    });
+    myMap.behaviors.disable('scrollZoom');
+    myMap.controls.add("zoomControl",{
+        position: {top: 15, left: 15}
+    });
+
+    {% for user in users %}
+    var myPlacemark = new ymaps.Placemark(
+            [{{ user.latitude }}, {{ user.longitude }}], {
+                balloonContentHeader: '<strong>{{ user.address }}</strong>',
+				balloonContentBody: '<em>{{ user.v_garbage }} Литров</em>'
+				//balloonContentFooter: 'Подвал'
+				}
+            );
+    myMap.geoObjects.add(myPlacemark);
+    {% endfor %}
+    ymaps.route({{ routes }}, {
+            mapStateAutoApply: true,
+            voidTrafficJams: false,
+            multiRoute: false,
+            routingMode: "auto",
+            viaIndexes: []
+        }).then(function (route) {
+          var points = route.getWayPoints();
+          points.get(0).properties.set('balloonContent', '');
+          points.get({{ length }}).properties.set('balloonContent', 'Дистанция: '+route.getHumanLength()+' Продолжительность: '+route.getHumanTime());
+          points.get(0).properties.set('iconContent', 'А');
+          points.get({{ length }}).properties.set('iconContent', 'Б');
+
+          console.log('distance: '+ route.getHumanLength());
+
+          route.getPaths().options.set({
+         // в балуне выводим только информацию о времени движения с учетом пробок
+          balloonContentBodyLayout: ymaps.templateLayoutFactory.createClass('$[properties.humanJamsTime]'),
+         // можно выставить настройки графики маршруту
+          strokeColor: '0000ffff',
+          opacity: 0.9
+        });
+
+            console.log('Route: ' + Math.floor(route.getLength()/1000));
+            console.log('Time: ' + Math.floor(route.getTime()/3600));
+
+
+        myMap.geoObjects.add(route);
+        $('body').find('.length-track').html(Math.floor(route.getLength()/1000) + ' Км');
+        $('body').find('.time-track').html(Math.floor(route.getTime()/3600) + ' Часа');
+
+    });
+    resizeMap();
+}
+
+
+$(window).resize(function() {
+    resizeMap();
+});
+
+
+function resizeMap() {
+    var mqLg = window.matchMedia('all and (max-width: 1500px)');
+    var mqMd = window.matchMedia('all and (max-width: 1405px)');
+    var mqSm = window.matchMedia('all and (max-width: 1202px)');
+    if (mqLg.matches) {
+        $('#map').removeClass('bigMap');
+        $('.map-container').removeClass('bigMap');
+        $('#map').removeClass('mdMap');
+        $('.map-container').removeClass('mdMap');
+        $('#map').addClass('lgMap');
+        $('.map-container').addClass('lgMap');
+        myMap.container.fitToViewport();
+    }
+    if (mqMd.matches) {
+        $('#map').removeClass('bigMap');
+        $('.map-container').removeClass('bigMap');
+        $('#map').removeClass('lgMap');
+        $('.map-container').removeClass('lgMap');
+        $('#map').addClass('mdMap');
+        $('.map-container').addClass('mdMap');
+        myMap.container.fitToViewport();
+    }
+    if(mqSm.matches){
+        $('#map').removeClass('bigMap');
+        $('.map-container').removeClass('bigMap');
+        $('#map').removeClass('lgMap');
+        $('.map-container').removeClass('lgMap');
+        $('#map').removeClass('mdMap');
+        $('.map-container').removeClass('mdMap');
+
+        $('#map').removeClass('map-mobile');
+        $('.map-container').removeClass('map-mobile');
+
+        myMap.container.fitToViewport();
+    }
+    if (!mqLg.matches && !mqMd.matches){
+        $('#map').removeClass('lgMap');
+        $('.map-container').removeClass('lgMap');
+        $('#map').removeClass('mdMap');
+        $('.map-container').removeClass('mdMap');
+        $('#map').addClass('bigMap');
+        $('.map-container').addClass('bigMap');
+        myMap.container.fitToViewport();
+    }
+}
+    </script>
+{% endblock maps_script %}
