@@ -42,9 +42,11 @@
                     <div class="account-order-type">
                     <select id="time-interval" name="selectbasic" class="account-data-select">
                             <option value="0" selected >----------</option>
+                               {% if dates %}
                                     {% for item in dates %}
                             <option value="{{ item }}">{{ item }}</option>
                                          {% endfor %}
+                                {% endif %}
                             </select>
 
                            <button type="submit" class="account-order-button active-account-order-button">Нанести</button>
