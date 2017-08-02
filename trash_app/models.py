@@ -34,6 +34,9 @@ class TimeInterval(models.Model):
                                      blank=True, null=True)
     ordering = models.PositiveSmallIntegerField(default=0)
     date_time = models.ManyToManyField('Date', related_name='date_interval', blank=True)
+    viz_30 = models.BooleanField(default=False, blank=True)
+    viz_60 = models.BooleanField(default=False, blank=True)
+    viz_120 = models.BooleanField(default=False, blank=True)
 
     def __str__(self):
         if self.time_interval:

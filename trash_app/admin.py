@@ -10,13 +10,14 @@ class PlaceAdmin(admin.ModelAdmin):
 
 
 class TimeIntervalAdmin(admin.ModelAdmin):
-    list_display = ['time_interval', 'display_data', 'ordering']
+    list_display = ['time_interval', 'display_data', 'ordering', 'viz_30', 'viz_60', 'viz_120']
     list_display_links = ['time_interval']
 
 
 class VGarbageAdmin(admin.ModelAdmin):
     list_display = ['garbage', 'ordering']
     list_display_links = ['garbage']
+
 
 class RoutesAdmin(admin.ModelAdmin):
     list_display = ['title', 'ordering', 'route_place']

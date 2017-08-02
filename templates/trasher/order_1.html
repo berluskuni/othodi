@@ -40,7 +40,7 @@
                 </div>
             </div>
 
-            <div class="row content-order">
+            <div class="row content-order" id="interval" style="display: none">
                 <div class="form-group-button">
                     <label class="order-button-label">Укажите желаемый интервал забора мусора</label>
                     {% for item in dates %}
@@ -79,15 +79,13 @@
                     </div>
                 </div>
             </div>
-
-
+             {% include 'includes/payment.html' %}
             <div class="row content-order-submit">
                 <div class="form-group-button">
                         <a href="javascript:void(0);" class="submit-order"><span>Отправить заказ</span></a>
-                        <span class="submit-order-text">В течении 15 минут с Вами свяжется менеджер для подтверждения заказа</span>
                 </div>
             </div>
-       {% include 'includes/payment.html' %}
+
 
 <script>
     $(document).ready(function(){
@@ -116,6 +114,7 @@
            $(buttonArray[i]).removeClass('active-interval-button');
              }
         });
+
         $('.submit-order').off().on('click', function(){
             var body = $('body');
             var first_name = body.find('#first_name').val();
